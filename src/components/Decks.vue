@@ -13,43 +13,61 @@
             v-on:keyup.enter="getBusinesses"
             placeholder=" Address, City, Zip Code, etc..."
           />
-          <button :disabled='cityName.length < 3' class="searchButton" @click="getBusinesses">TYPE STUFF</button>
+          <button
+            :disabled="cityName.length < 3"
+            class="searchButton"
+            @click="getBusinesses"
+          >TYPE STUFF</button>
         </div>
         <img class="orLogo" src="//decidor.s3.amazonaws.com/OR_solid_white.png" alt="OR" />
         <button class="locationButton" @click="getLocation()">Get My Location For Me</button>
       </div>
 
       <div v-if="!hiddenCustomSearch">
-        <article class='customSearchGrid'>
-          <label id="custom-search-head" class="searchPrompt" for="custom-term-search">What are you looking for?</label>
-            <input
-              class="input"
-              id="custom-term-search"
-              type="text"
-              v-model="searchTerm"
-              placeholder=" Coffee, bookstores, etc..."
-            />
+        <article class="customSearchGrid">
           <label
-              class="searchPrompt"
-              for="custom-location-search"
-              id="find-choices-head"
-            >Where would you like to find choices?</label>
-            <input
-              class="input"
-              id="custom-location-search"
-              type="text"
-              v-model="cityName"
-              v-on:keyup.enter="getBusinesses"
-              placeholder="Address, City, Zip Code, etc..."
-            />
-             <button id="get-choices-custom" :disabled='cityName.length && searchTerm.length < 3' class="searchButton" @click="getBusinesses">TYPE STUFF</button>
-             <!-- <button id="get-choices-custom-2" :disabled='cityName.length && searchTerm.length < 3' class="searchButton" @click="getBusinesses">← TYPE STUFF</button> -->
+            id="custom-search-head"
+            class="searchPrompt"
+            for="custom-term-search"
+          >What are you looking for?</label>
+          <input
+            class="input"
+            id="custom-term-search"
+            type="text"
+            v-model="searchTerm"
+            placeholder=" Coffee, bookstores, etc..."
+          />
+          <label
+            class="searchPrompt"
+            for="custom-location-search"
+            id="find-choices-head"
+          >Where would you like to find choices?</label>
+          <input
+            class="input"
+            id="custom-location-search"
+            type="text"
+            v-model="cityName"
+            v-on:keyup.enter="getBusinesses"
+            placeholder="Address, City, Zip Code, etc..."
+          />
+          <button
+            id="get-choices-custom"
+            :disabled="cityName.length && searchTerm.length < 3"
+            class="searchButton"
+            @click="getBusinesses"
+          >TYPE STUFF</button>
+          <!-- <button id="get-choices-custom-2" :disabled='cityName.length && searchTerm.length < 3' class="searchButton" @click="getBusinesses">← TYPE STUFF</button> -->
           <span id="or-logo-custom" class="orLogo">or</span>
-          <button id="location-custom-butt" class="locationButton" :disabled='searchTerm.length < 1' @click="getLocation()">Get my location for me</button>
+          <button
+            id="location-custom-butt"
+            class="locationButton"
+            :disabled="searchTerm.length < 1"
+            @click="getLocation()"
+          >Get my location for me</button>
         </article>
       </div>
 
-      <div v-if="!hiddenMovieSearch" class="searchBar">
+      <!-- <div v-if="!hiddenMovieSearch" class="searchBar">
         <label class="searchPrompt" for="movie-location-search">Where would you like to find movies?</label>
         <div class='help'>
           <input
@@ -64,11 +82,11 @@
         </div>
         <img class="orLogo" id="movie-or-logo" src="//decidor.s3.amazonaws.com/OR_solid_white.png" alt="OR" />
         <button class="locationButton" id="movie-location-button" @click="getMovieLocation()">Get My Location For Me</button>
-      </div>
+      </div>-->
 
-      <div v-if="!hiddenMovies">
+      <!-- <div v-if="!hiddenMovies">
         <ChoiceLogic :choices="allDecks.inTheaters" />
-      </div>
+      </div>-->
 
       <div v-if="!hiddenNetflix">
         <ChoiceLogic :choices="allDecks.netflixDeck" />
@@ -78,8 +96,12 @@
         <ChoiceLogic :choices="allDecks.netflixFilmsDeck" />
       </div>
 
-      <div v-if="!hiddenActivity">
-        <ChoiceLogic :choices="allDecks.activityDeck" />
+      <div v-if="!hiddenFictionBooks">
+        <ChoiceLogic :choices="allDecks.fictionDeck" />
+      </div>
+
+      <div v-if="!hiddenNonFictionBooks">
+        <ChoiceLogic :choices="allDecks.nonFictionDeck" />
       </div>
 
       <div v-if="!hiddenBusiness">
@@ -98,12 +120,8 @@
         <ChoiceLogic :choices="allDecks.cookoutMilkshakes" />
       </div>
 
-      <div v-if="!hiddenFictionBooks">
-        <ChoiceLogic :choices="allDecks.fictionDeck" />
-      </div>
-
-      <div v-if="!hiddenNonFictionBooks">
-        <ChoiceLogic :choices="allDecks.nonFictionDeck" />
+      <div v-if="!hiddenActivity">
+        <ChoiceLogic :choices="allDecks.activityDeck" />
       </div>
 
       <div id="deckContainer" :class="{hiddenContainer: hiddenContainer}" class="deck-grid">
@@ -124,10 +142,8 @@
       </div>
     </div>
     <div>
-      <footer v-if="!hiddenDeck" class="footer" role="contentinfo">
-      </footer>
-      <footer v-if="hiddenDeck" class="choice-footer" role="contentinfo">
-      </footer>
+      <footer v-if="!hiddenDeck" class="footer" role="contentinfo"></footer>
+      <footer v-if="hiddenDeck" class="choice-footer" role="contentinfo"></footer>
     </div>
   </section>
 </template>
@@ -137,7 +153,6 @@
 import ChoiceLogic from "./ChoiceLogic";
 
 import axios from "axios";
-// import { callbackify } from "util";
 
 const yelpBaseURL =
   "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?";
@@ -148,12 +163,12 @@ const databaseBaseURL = "//decidor.herokuapp.com/starterdecks/";
 const bookBaseURL = `https://api.nytimes.com/svc/books/v3/lists/current/`;
 const nytApiKey = `4QC7YMXjnIWo1dTtGFpj5itZlVDPvbOk`;
 
-const movieBaseURL =
-  "https://api.internationalshowtimes.com/v4/movies/?fields=title,slug,website,poster_image.flat&countries=US&release_date_to=";
-const movieApiKey = "LafOf9zLcvERnGpF3IBU85w8txyALDvH";
+// const movieBaseURL =
+//   "https://api.internationalshowtimes.com/v4/movies/?fields=title,slug,website,poster_image.flat&countries=US&release_date_to=";
+// const movieApiKey = "LafOf9zLcvERnGpF3IBU85w8txyALDvH";
 
-const movieCityURL =
-  "https://api.internationalshowtimes.com/v4/cities/?countries=US&";
+// const movieCityURL =
+//   "https://api.internationalshowtimes.com/v4/cities/?countries=US&";
 
 export default {
   name: "Decks",
@@ -163,10 +178,11 @@ export default {
   data: () => {
     return {
       allDecks: {
-        inTheaters: [],
+        // inTheaters: [],
         netflixDeck: [],
         netflixFilmsDeck: [],
-        activityDeck: [],
+        fictionDeck: [],
+        nonFictionDeck: [],
         yelpRestaurants: [],
         foodTypesDeck: [],
         fastFoodDeck: [],
@@ -175,8 +191,7 @@ export default {
         yelpShops: [],
         yelpParks: [],
         custom: [],
-        fictionDeck: [],
-        nonFictionDeck: []
+        activityDeck: []
       },
       database: [],
       // hiddenCards: true,
@@ -189,10 +204,10 @@ export default {
       hiddenContainer: false,
       businesses: [],
       results: [],
-      movies: [],
-      cities: [],
-      cityID: "",
-      movieLocation: "",
+      // movies: [],
+      // cities: [],
+      // cityID: "",
+      // movieLocation: "",
       hiddenBusiness: true,
       hiddenNetflix: true,
       hiddenFood: true,
@@ -202,10 +217,10 @@ export default {
       hiddenNonFictionBooks: true,
       hiddenSearch: true,
       hiddenCustomSearch: true,
-      hiddenMovieSearch: true,
+      // hiddenMovieSearch: true,
       hiddenNav: false,
       hiddenMilkshakes: true,
-      hiddenMovies: true,
+      // hiddenMovies: true,
       hiddenNetflixFilms: true,
       formattedSearch: "",
       lat: "",
@@ -215,11 +230,11 @@ export default {
   },
   mounted() {
     this.buildLocalApi();
-    this.allDecks.inTheaters.title = "In Theaters Now";
-    this.allDecks.inTheaters.image =
-      "//decidor.s3.amazonaws.com/toy_story.jpeg";
-    this.allDecks.inTheaters.description =
-      "A collection of movies currently in theaters";
+    // this.allDecks.inTheaters.title = "In Theaters Now";
+    // this.allDecks.inTheaters.image =
+    //   "//decidor.s3.amazonaws.com/toy_story.jpeg";
+    // this.allDecks.inTheaters.description =
+    //   "A collection of movies currently in theaters";
     this.allDecks.netflixDeck.title = "Netflix Shows";
     this.allDecks.netflixDeck.image =
       "//decidor.s3.amazonaws.com/netflix_logo.jpeg";
@@ -230,11 +245,16 @@ export default {
       "//decidor.s3.amazonaws.com/netflix_white.png";
     this.allDecks.netflixFilmsDeck.description =
       "A collection of popular Netflix Original Films";
-    this.allDecks.activityDeck.title = "Date Night";
-    this.allDecks.activityDeck.image =
-      "//decidor.s3.amazonaws.com/couple-popcorn-movies.jpg";
-    this.allDecks.activityDeck.description =
-      "A collection of activities for couples on a date";
+        this.allDecks.fictionDeck.title = "Fiction";
+    this.allDecks.fictionDeck.image =
+      "//decidor.s3.amazonaws.com/NYT_yellow_square.png";
+    this.allDecks.fictionDeck.description =
+      "A collection of the New York Times most recent Hardcover Fiction BestSelling Books";
+    this.allDecks.nonFictionDeck.title = "Non-Fiction";
+    this.allDecks.nonFictionDeck.image =
+      "//decidor.s3.amazonaws.com/NYT_blue_square.png";
+    this.allDecks.nonFictionDeck.description =
+      "A collection of the New York Times most recent Hardcover Non-Fiction BestSelling Books";
     this.allDecks.yelpRestaurants.title = "Restaurants";
     this.allDecks.yelpRestaurants.image =
       "//decidor.s3.amazonaws.com/restaurants.jpeg";
@@ -271,16 +291,11 @@ export default {
     this.allDecks.custom.image = "//decidor.s3.amazonaws.com/custom.jpeg";
     this.allDecks.custom.description =
       "A collection that you can create using your own search term and location";
-    this.allDecks.fictionDeck.title = "Fiction";
-    this.allDecks.fictionDeck.image =
-      "//decidor.s3.amazonaws.com/NYT_yellow_square.png";
-    this.allDecks.fictionDeck.description =
-      "A collection of the New York Times most recent Hardcover Fiction BestSelling Books";
-    this.allDecks.nonFictionDeck.title = "Non-Fiction";
-    this.allDecks.nonFictionDeck.image =
-      "//decidor.s3.amazonaws.com/NYT_blue_square.png";
-    this.allDecks.nonFictionDeck.description =
-      "A collection of the New York Times most recent Hardcover Non-Fiction BestSelling Books";
+        this.allDecks.activityDeck.title = "Date Night";
+    this.allDecks.activityDeck.image =
+      "//decidor.s3.amazonaws.com/couple-popcorn-movies.jpg";
+    this.allDecks.activityDeck.description =
+      "A collection of activities for couples on a date";
   },
   methods: {
     sendKey(key) {
@@ -309,8 +324,8 @@ export default {
         this.hiddenSearch = false;
       } else if (key.includes("custom")) {
         this.hiddenCustomSearch = false;
-      } else if (key.includes("inTheaters")) {
-        this.hiddenMovieSearch = false;
+        // } else if (key.includes("inTheaters")) {
+        //   this.hiddenMovieSearch = false;
       }
     },
     getLocation: function() {
@@ -502,98 +517,98 @@ export default {
         return this.allDecks.nonFictionDeck;
       });
     },
-    getCityID() {
-      let completeCityURL = movieCityURL + "query=" + this.cityName;
+    // getCityID() {
+    //   let completeCityURL = movieCityURL + "query=" + this.cityName;
 
-      axios
-        .get(completeCityURL, {
-          headers: {
-            Authorization: `Token ${movieApiKey}`
-          }
-        })
-        .then(response => {
-          this.cities = response.data.cities;
-          this.cityID = this.cities[0].id;
-          this.makeMovieCityURL();
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
-    getMovieLocation: function() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(this.showMoviePosition);
-      } else {
-        this.error = "Geolocation is not supported.";
-      }
-    },
-    showMoviePosition: function(position) {
-      this.lat = position.coords.latitude;
-      this.lon = position.coords.longitude;
-      this.makeMovieLatLonURL();
-    },
-    makeMovieLatLonURL(url) {
-      this.movieLocation = `&location=${this.lat},${this.lon}&distance=30`;
-      this.getMovies();
-    },
-    makeMovieCityURL() {
-      this.movieLocation = `&city_ids=${this.cityID}`;
-      this.getMovies();
-    },
-    getMovies() {
-      let todaysDate = new Date();
-      let month = ("0" + (todaysDate.getMonth() + 1)).slice(-2);
-      let date = ("0" + todaysDate.getDate()).slice(-2);
-      let year = todaysDate.getFullYear();
-      let formattedDate = year + "-" + month + "-" + date;
+    //   axios
+    //     .get(completeCityURL, {
+    //       headers: {
+    //         Authorization: `Token ${movieApiKey}`
+    //       }
+    //     })
+    //     .then(response => {
+    //       this.cities = response.data.cities;
+    //       this.cityID = this.cities[0].id;
+    //       this.makeMovieCityURL();
+    //     })
+    //     .catch(error => {
+    //       console.log(error);
+    //     });
+    // },
+    // getMovieLocation: function() {
+    //   if (navigator.geolocation) {
+    //     navigator.geolocation.getCurrentPosition(this.showMoviePosition);
+    //   } else {
+    //     this.error = "Geolocation is not supported.";
+    //   }
+    // },
+    // showMoviePosition: function(position) {
+    //   this.lat = position.coords.latitude;
+    //   this.lon = position.coords.longitude;
+    //   this.makeMovieLatLonURL();
+    // },
+    // makeMovieLatLonURL(url) {
+    //   this.movieLocation = `&location=${this.lat},${this.lon}&distance=30`;
+    //   this.getMovies();
+    // },
+    // makeMovieCityURL() {
+    //   this.movieLocation = `&city_ids=${this.cityID}`;
+    //   this.getMovies();
+    // },
+    // getMovies() {
+    //   let todaysDate = new Date();
+    //   let month = ("0" + (todaysDate.getMonth() + 1)).slice(-2);
+    //   let date = ("0" + todaysDate.getDate()).slice(-2);
+    //   let year = todaysDate.getFullYear();
+    //   let formattedDate = year + "-" + month + "-" + date;
 
-      let startDate = new Date();
-      let sDate = ("0" + startDate.getDate()).slice(-2);
-      let sMonth = ("0" + (startDate.getMonth() - 1)).slice(-2);
-      let sYear = startDate.getFullYear();
-      let twoMonthsAgoDate = sYear + "-" + sMonth + "-" + sDate;
+    //   let startDate = new Date();
+    //   let sDate = ("0" + startDate.getDate()).slice(-2);
+    //   let sMonth = ("0" + (startDate.getMonth() - 1)).slice(-2);
+    //   let sYear = startDate.getFullYear();
+    //   let twoMonthsAgoDate = sYear + "-" + sMonth + "-" + sDate;
 
-      let movieApiURL = `${movieBaseURL}${formattedDate}&release_date_from=${twoMonthsAgoDate}`;
-      movieApiURL = movieApiURL + this.movieLocation;
+    //   let movieApiURL = `${movieBaseURL}${formattedDate}&release_date_from=${twoMonthsAgoDate}`;
+    //   movieApiURL = movieApiURL + this.movieLocation;
 
-      axios
-        .get(movieApiURL, {
-          headers: {
-            Authorization: `Token ${movieApiKey}`
-          }
-        })
-        .then(response => {
-          this.allDecks.movies = response.data.movies;
-          console.log(response.data.movies);
-          this.filterMovies(this.allDecks.movies);
-          this.hiddenMovies = false;
-          this.hiddenMovieSearch = true;
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
-    filterMovies() {
-      let filteredMovies = this.allDecks.movies.filter(
-        movie => movie.poster_image !== null
-      );
-      filteredMovies.map(movie => {
-        let movieTitle = movie.title;
-        let movieDescription = movie.slug;
-        let movieCover = movie.poster_image;
-        let movieURL = movie.website;
+    //   axios
+    //     .get(movieApiURL, {
+    //       headers: {
+    //         Authorization: `Token ${movieApiKey}`
+    //       }
+    //     })
+    //     .then(response => {
+    //       this.allDecks.movies = response.data.movies;
+    //       console.log(response.data.movies);
+    //       this.filterMovies(this.allDecks.movies);
+    //       this.hiddenMovies = false;
+    //       this.hiddenMovieSearch = true;
+    //     })
+    //     .catch(error => {
+    //       console.log(error);
+    //     });
+    // },
+    // filterMovies() {
+    //   let filteredMovies = this.allDecks.movies.filter(
+    //     movie => movie.poster_image !== null
+    //   );
+    //   filteredMovies.map(movie => {
+    //     let movieTitle = movie.title;
+    //     let movieDescription = movie.slug;
+    //     let movieCover = movie.poster_image;
+    //     let movieURL = movie.website;
 
-        this.allDecks.inTheaters.push({
-          title: movieTitle,
-          description: movieDescription,
-          card_image: movieCover,
-          url: movieURL
-        });
-        filteredMovies = [];
-        this.allDecks.movies = [];
-        return this.allDecks.inTheaters;
-      });
-    },
+    //     this.allDecks.inTheaters.push({
+    //       title: movieTitle,
+    //       description: movieDescription,
+    //       card_image: movieCover,
+    //       url: movieURL
+    //     });
+    //     filteredMovies = [];
+    //     this.allDecks.movies = [];
+    //     return this.allDecks.inTheaters;
+    //   });
+    // },
     buildLocalApi() {
       axios.get(databaseBaseURL).then(response => {
         this.database = response.data.results;
