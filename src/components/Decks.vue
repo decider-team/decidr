@@ -56,7 +56,6 @@
             class="searchButton"
             @click="getBusinesses"
           >TYPE STUFF</button>
-          <!-- <button id="get-choices-custom-2" :disabled='cityName.length && searchTerm.length < 3' class="searchButton" @click="getBusinesses">← TYPE STUFF</button> -->
           <span id="or-logo-custom" class="orLogo">or</span>
           <button
             id="location-custom-butt"
